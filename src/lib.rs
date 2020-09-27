@@ -1,4 +1,5 @@
 use std::path::{Path, PathBuf};
+use std::collections::HashSet;
 use glob::Pattern;
 
 #[derive(Debug)]
@@ -91,7 +92,10 @@ pub fn unsplit(mover: &Box<dyn FileMover>, pattern: &glob::Pattern) -> Result<()
 													.collect();
 
 	let results: Result<Vec<_>, _> = files.iter().map(move |f| mover.as_ref().relocate(f, current_directory.as_path())).collect();
-
 	results?;
+	let directories_to_clean: HashSet<_> = files.iter().flat_map(|f| f.parent()).collect();
+	directories_to_clean.iter().for_each(|f| {
+		std::fs::remove_dir(f).unwrap_or(());
+	});
 	Ok(())
 }
