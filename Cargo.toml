@@ -1,6 +1,6 @@
 [package]
 name = "reorger"
-version = "0.3.1"
+version = "0.3.2-alpha.0"
 authors = ["Russell Hay <russell.hay@gmail.com>"]
 edition = "2018"
 description = "A tool for reorganizing a large number of files by splitting and unsplitting files into subdirectories"
