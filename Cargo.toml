@@ -3,6 +3,8 @@ name = "reorg"
 version = "0.1.0"
 authors = ["Russell Hay <russell.hay@gmail.com>"]
 edition = "2018"
+description = "A tool for reorganizing a large number of files by splitting and unsplitting files into subdirectories"
+license = "MIT"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
