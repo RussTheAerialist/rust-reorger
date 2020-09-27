@@ -1,13 +1,13 @@
-use structopt::StructOpt;
-use reorger::FileMover;
 use glob::Pattern;
+use reorger::FileMover;
+use structopt::StructOpt;
 
 #[derive(StructOpt, Debug)]
 struct Opt {
-    #[structopt(long, short="n")]
+    #[structopt(long, short = "n")]
     dry_run: bool,
 
-    #[structopt(long, short, default_value="*")]
+    #[structopt(long, short, default_value = "*")]
     glob: String,
 
     #[structopt(subcommand)]
@@ -16,18 +16,18 @@ struct Opt {
 
 #[derive(StructOpt, Debug)]
 enum Command {
-    #[structopt(about="Split the current directory's files into subdirectories")]
+    #[structopt(about = "Split the current directory's files into subdirectories")]
     Split,
 
-    #[structopt(about="Move all files from subdirectories into this directory")]
+    #[structopt(about = "Move all files from subdirectories into this directory")]
     Unsplit,
 }
 
 fn get_file_mover(dry_run: bool) -> Box<dyn FileMover> {
     if dry_run {
-        Box::new(reorger::DryRunFileMover { })
+        Box::new(reorger::DryRunFileMover {})
     } else {
-        Box::new(reorger::OsFileMover { })
+        Box::new(reorger::OsFileMover {})
     }
 }
 
