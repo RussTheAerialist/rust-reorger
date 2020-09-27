@@ -9,7 +9,7 @@ pub fn sample(
     nth: u32,
 ) -> Result<(), Box<dyn std::error::Error>> {
 	let source_directory = PathBuf::from(source);
-	let destination_directory = PathBuf::from("./sampled");
+	let destination_directory = PathBuf::from("sampled");
 
 	let mut files: Vec<_> = std::fs::read_dir(&source_directory)?
 			.into_iter()
@@ -23,7 +23,7 @@ pub fn sample(
 
 	let results: Result<Vec<_>, _> = files.iter()
 		.step_by(nth as usize)
-		.flat_map(|f| f.file_name())
+		// .flat_map(|f| f.file_name())
 		.map(PathBuf::from)
 		.map(move |f| mover.copy(f.as_path(), destination_directory.as_path()))
 		.collect();

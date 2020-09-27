@@ -59,14 +59,21 @@ impl FileMover for DryRunFileMover {
 }
 
 pub struct OsFileMover {}
+impl OsFileMover {
+	fn parent<'a>(&self, p: &'a Path) -> std::io::Result<&'a Path> {
+		let parent = p.parent().ok_or_else(|| {
+			std::io::Error::new(std::io::ErrorKind::Other, "Unable to get filename")
+		})?;
+		std::fs::create_dir_all(parent)?;
+		Ok(parent)
+	}
+}
 impl FileMover for OsFileMover {
     fn relocate(&self, source_file: &Path, destination: &Path) -> std::io::Result<()> {
         let destination = get_destination_path(source_file, destination)?;
-        let parent = destination.parent().ok_or_else(|| {
-            std::io::Error::new(std::io::ErrorKind::Other, "Unable to get filename")
-        })?;
-        std::fs::create_dir_all(parent)?;
-        std::fs::rename(source_file, &destination)?;
+        self.parent(&destination)?;
+
+				std::fs::rename(source_file, &destination)?;
         println!("{} -> {}", source_file.display(), destination.display());
         Ok(())
     }
@@ -76,6 +83,10 @@ impl FileMover for OsFileMover {
     }
 
     fn copy(&self, source: &Path, destination: &Path) -> std::io::Result<()> {
-        todo!()
+			let destination = get_destination_path(source, destination)?;
+			self.parent(&destination)?;
+			println!("{} -> {}", source.display(), destination.display());
+			std::fs::copy(source, &destination)?;
+			Ok(())
     }
 }
