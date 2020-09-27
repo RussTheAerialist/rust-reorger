@@ -1,5 +1,5 @@
 [package]
-name = "reorg"
+name = "reorger"
 version = "0.1.0"
 authors = ["Russell Hay <russell.hay@gmail.com>"]
 edition = "2018"

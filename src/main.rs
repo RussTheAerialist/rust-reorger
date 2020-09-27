@@ -1,5 +1,5 @@
 use structopt::StructOpt;
-use reorg::FileMover;
+use reorger::FileMover;
 use glob::Pattern;
 
 #[derive(StructOpt, Debug)]
@@ -25,9 +25,9 @@ enum Command {
 
 fn get_file_mover(dry_run: bool) -> Box<dyn FileMover> {
     if dry_run {
-        Box::new(reorg::DryRunFileMover { })
+        Box::new(reorger::DryRunFileMover { })
     } else {
-        Box::new(reorg::OsFileMover { })
+        Box::new(reorger::OsFileMover { })
     }
 }
 
@@ -37,8 +37,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let glob_processor = Pattern::new(&opts.glob)?;
 
     match opts.command {
-        Command::Split => reorg::split(&mover, &glob_processor)?,
-        Command::Unsplit => reorg::unsplit(&mover, &glob_processor)?,
+        Command::Split => reorger::split(&mover, &glob_processor)?,
+        Command::Unsplit => reorger::unsplit(&mover, &glob_processor)?,
     };
 
     Ok(())
