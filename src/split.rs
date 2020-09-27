@@ -66,7 +66,7 @@ pub fn unsplit(
     results?;
     let directories_to_clean: HashSet<_> = files.iter().flat_map(|f| f.parent()).collect();
     directories_to_clean.iter().for_each(|f| {
-        std::fs::remove_dir(f).unwrap_or(());
+        mover.remove(f).unwrap_or(());
     });
     Ok(())
 }

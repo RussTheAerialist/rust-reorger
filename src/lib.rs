@@ -25,7 +25,8 @@ impl std::fmt::Display for ReorgError {
 }
 
 pub trait FileMover {
-    fn relocate(&self, source_file: &Path, destination_directory: &Path) -> std::io::Result<()>;
+		fn relocate(&self, source_file: &Path, destination_directory: &Path) -> std::io::Result<()>;
+		fn remove(&self, p: &Path) -> std::io::Result<()>;
 }
 
 fn get_destination_path(source: &Path, destination: &Path) -> std::io::Result<PathBuf> {
@@ -42,6 +43,10 @@ impl FileMover for DryRunFileMover {
         println!("{} -> {}", source_file.display(), destination.display());
         Ok(())
     }
+
+    fn remove(&self, p: &Path) -> std::io::Result<()> {
+        Ok(()) // This is a no-op for dry runs
+    }
 }
 
 pub struct OsFileMover {}
@@ -55,5 +60,9 @@ impl FileMover for OsFileMover {
         std::fs::rename(source_file, &destination)?;
         println!("{} -> {}", source_file.display(), destination.display());
         Ok(())
-    }
+		}
+
+		fn remove(&self, p: &Path) -> std::io::Result<()> {
+			std::fs::remove_dir(p)
+		}
 }
