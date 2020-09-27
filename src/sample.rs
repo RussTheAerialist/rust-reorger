@@ -22,8 +22,9 @@ pub fn sample(
 	files.sort();
 
 	let results: Result<Vec<_>, _> = files.iter()
+		.step_by(nth as usize)
 		.flat_map(|f| f.file_name())
-		.map(|f| PathBuf::from(f))
+		.map(PathBuf::from)
 		.map(move |f| mover.copy(f.as_path(), destination_directory.as_path()))
 		.collect();
 
