@@ -37,8 +37,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let glob_processor = Pattern::new(&opts.glob)?;
 
     match opts.command {
-        Command::Split => reorger::split(&mover, &glob_processor)?,
-        Command::Unsplit => reorger::unsplit(&mover, &glob_processor)?,
+        Command::Split => reorger::split(mover.as_ref(), &glob_processor)?,
+        Command::Unsplit => reorger::unsplit(mover.as_ref(), &glob_processor)?,
     };
 
     Ok(())

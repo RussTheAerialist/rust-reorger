@@ -2,7 +2,7 @@ use crate::{FileMover, ReorgError};
 use std::collections::HashSet;
 
 pub fn split(
-    mover: &Box<dyn FileMover>,
+    mover: &dyn FileMover,
     pattern: &glob::Pattern,
 ) -> Result<(), Box<dyn std::error::Error>> {
     let current_directory = std::env::current_dir()?;
@@ -25,7 +25,6 @@ pub fn split(
             let destination_path = current_directory.join(format!("{:04}", i));
             b.iter().map(move |p| {
                 mover
-                    .as_ref()
                     .relocate(p.as_path(), destination_path.as_path())
             })
         })
@@ -36,7 +35,7 @@ pub fn split(
 }
 
 pub fn unsplit(
-    mover: &Box<dyn FileMover>,
+    mover: &dyn FileMover,
     pattern: &glob::Pattern,
 ) -> Result<(), Box<dyn std::error::Error>> {
     let current_directory = std::env::current_dir()?;
@@ -62,7 +61,7 @@ pub fn unsplit(
 
     let results: Result<Vec<_>, _> = files
         .iter()
-        .map(move |f| mover.as_ref().relocate(f, current_directory.as_path()))
+        .map(move |f| mover.relocate(f, current_directory.as_path()))
         .collect();
     results?;
     let directories_to_clean: HashSet<_> = files.iter().flat_map(|f| f.parent()).collect();
