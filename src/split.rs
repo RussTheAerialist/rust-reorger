@@ -23,10 +23,8 @@ pub fn split(
         .enumerate()
         .flat_map(|(i, b)| {
             let destination_path = current_directory.join(format!("{:04}", i));
-            b.iter().map(move |p| {
-                mover
-                    .relocate(p.as_path(), destination_path.as_path())
-            })
+            b.iter()
+                .map(move |p| mover.relocate(p.as_path(), destination_path.as_path()))
         })
         .collect();
 

@@ -1,7 +1,9 @@
 use std::path::{Path, PathBuf};
 
+mod sample;
 mod split;
 
+pub use sample::sample;
 pub use split::{split, unsplit};
 
 #[derive(Debug)]
@@ -26,7 +28,8 @@ impl std::fmt::Display for ReorgError {
 
 pub trait FileMover {
 		fn relocate(&self, source_file: &Path, destination_directory: &Path) -> std::io::Result<()>;
-		fn remove(&self, p: &Path) -> std::io::Result<()>;
+		fn copy(&self, source: &Path, destination: &Path) -> std::io::Result<()>;
+    fn remove(&self, p: &Path) -> std::io::Result<()>;
 }
 
 fn get_destination_path(source: &Path, destination: &Path) -> std::io::Result<PathBuf> {
@@ -44,8 +47,14 @@ impl FileMover for DryRunFileMover {
         Ok(())
     }
 
-    fn remove(&self, p: &Path) -> std::io::Result<()> {
+    fn remove(&self, _: &Path) -> std::io::Result<()> {
         Ok(()) // This is a no-op for dry runs
+    }
+
+    fn copy(&self, source: &Path, destination: &Path) -> std::io::Result<()> {
+			let destination = get_destination_path(source, destination)?;
+			println!("{} -> {}", source.display(), destination.display());
+			Ok(())
     }
 }
 
@@ -60,9 +69,13 @@ impl FileMover for OsFileMover {
         std::fs::rename(source_file, &destination)?;
         println!("{} -> {}", source_file.display(), destination.display());
         Ok(())
-		}
+    }
 
-		fn remove(&self, p: &Path) -> std::io::Result<()> {
-			std::fs::remove_dir(p)
-		}
+    fn remove(&self, p: &Path) -> std::io::Result<()> {
+        std::fs::remove_dir(p)
+    }
+
+    fn copy(&self, source: &Path, destination: &Path) -> std::io::Result<()> {
+        todo!()
+    }
 }

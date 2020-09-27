@@ -21,6 +21,13 @@ enum Command {
 
     #[structopt(about = "Move all files from subdirectories into this directory")]
     Unsplit,
+
+    #[structopt(about = "Samples files from a directory, copying them into a subdirectory")]
+    Sample {
+        #[structopt(long, short, default_value=".")]
+        source: String,
+        nth: u32
+    },
 }
 
 fn get_file_mover(dry_run: bool) -> Box<dyn FileMover> {
@@ -39,6 +46,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     match opts.command {
         Command::Split => reorger::split(mover.as_ref(), &glob_processor)?,
         Command::Unsplit => reorger::unsplit(mover.as_ref(), &glob_processor)?,
+        Command::Sample { source, nth } => reorger::sample(mover.as_ref(), &glob_processor, &source, nth)?,
     };
 
     Ok(())
