@@ -42,7 +42,8 @@ impl FileMover for OsFileMover {
 		let destination = get_destination_path(source_file, destination)?;
 		let parent = destination.parent().ok_or_else(||  std::io::Error::new(std::io::ErrorKind::Other, "Unable to get filename"))?;
 		std::fs::create_dir_all(parent)?;
-		std::fs::rename(source_file, destination)?;
+		std::fs::rename(source_file, &destination)?;
+		println!("{} -> {}", source_file.display(), destination.display());
 		Ok(())
 	}
 }
